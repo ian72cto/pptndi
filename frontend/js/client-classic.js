@@ -273,7 +273,7 @@ $(document).ready(function() {
 						return;
 					}
 					slideTranTimers[10] = setTimeout(function() {
-						ipc.sendSync("require", {
+						ipc.send("require", {
 							lib: "ffi",
 							func: "send",
 							args: [
@@ -285,7 +285,7 @@ $(document).ready(function() {
 					}, 10 * parseFloat(duration) * 50);
 				}
 				slideTranTimers[i] = setTimeout(function() {
-					ipc.sendSync("require", {
+					ipc.send("require", {
 						lib: "ffi",
 						func: "send",
 						args: [
@@ -332,7 +332,7 @@ $(document).ready(function() {
 		} else {
 			stopSlideTransition();
 			updateCurNext(curSli, nextSli);
-			ipc.sendSync("require", {
+			ipc.send("require", {
 				lib: "ffi",
 				func: "send",
 				args: [
@@ -1354,7 +1354,7 @@ $(document).ready(function() {
 		}
 		$("img.image_picker_image:first").attr('src', dirTo);
 
-		ipc.sendSync("require", {
+		ipc.send("require", {
 			lib: "ffi",
 			func: "send",
 			args: [

@@ -174,7 +174,7 @@ $(document).ready(function() {
 		buffer = PNG.sync.write(png);
 		fs.writeFileSync(file, buffer);
 		$("#slidePreview").attr("src", file + "?" + now);
-		ipc.sendSync("require", {
+		ipc.send("require", {
 			lib: "ffi",
 			func: "send",
 			args: [ file, false ]
@@ -311,7 +311,7 @@ $(document).ready(function() {
 			} catch(e) {
 				console.log("file could not be generated: "+ preFile);
 			}
-			ipc.sendSync("require", {
+			ipc.send("require", {
 				lib: "ffi",
 				func: "send",
 				args: [ file, false ]
@@ -373,7 +373,7 @@ $(document).ready(function() {
 					return;
 				}
 				slideTranTimers[10] = setTimeout(function() {
-					ipc.sendSync("require", {
+					ipc.send("require", {
 						lib: "ffi",
 						func: "send",
 						args: [ tmpDir + "/Slide.png", false ]
@@ -390,7 +390,7 @@ $(document).ready(function() {
 			}
 
 			slideTranTimers[i] = setTimeout(function() {
-				ipc.sendSync("require", {
+				ipc.send("require", {
 					lib: "ffi",
 					func: "send",
 					args: [ tmpDir + "/t" + i.toString() + ".png", false ]
