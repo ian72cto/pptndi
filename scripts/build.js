@@ -48,9 +48,9 @@ function _prepare() {
 
 	switch (process.arch) {
 		case "x64":
+		case "arm64":
 			break;
 		case "x86":
-		case "arm64":
 			console.error("Unsupported arch type: " + process.arch);
 			_exit(1);
 		default:
@@ -344,8 +344,9 @@ function _buildDarwin() {
 		_exit(1);
 	}
 	try {
+		const arch = process.arch === "arm64" ? "arm64" : "x86_64";
 		console.log("Building PPTNDI...");
-		cmd = 'g++ -dynamiclib -o ./src/PPTNDI.dylib ./src/PPTNDI/PPTNDI.cpp "/Library/NDI SDK for macOS/lib/macOS/libndi.dylib" -rpath .'
+		cmd = `g++ -dynamiclib -arch ${arch} -o ./src/PPTNDI.dylib ./src/PPTNDI/PPTNDI.cpp "/Library/NDI SDK for macOS/lib/macOS/libndi.dylib" -rpath .`;
 		console.log(cmd);
 		out = execSync(cmd);
 		console.log(out.toString());
@@ -468,7 +469,8 @@ function _pack() {
 		}
 		console.log(out.toString());
 	} else if ( process.platform === "darwin" ) {
-		const opt='--icon=./deploy/backend/img/icon.icns --platform=darwin --overwrite --app-copyright=' + license;
+		const electronArch = process.arch === "arm64" ? "arm64" : "x64";
+		const opt=`--icon=./deploy/backend/img/icon.icns --platform=darwin --arch=${electronArch} --overwrite --app-copyright=${license}`;
 		try {
 			ver = execSync("./dev/node_modules/electron/dist/Electron.app/Contents/MacOS/Electron --version").toString().replace(/\r|\n/g, "");
 			abi = execSync("./dev/node_modules/electron/dist/Electron.app/Contents/MacOS/Electron --abi").toString().replace(/\r|\n/g, "");
