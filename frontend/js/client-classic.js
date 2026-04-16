@@ -55,9 +55,6 @@ $(document).ready(function() {
 		} catch(e) {
 		}
 
-		$.ajaxSetup({
-			async: false
-		});
 		reflectConfig();
 		ffi = ipc.sendSync("require", { lib: "ffi", func: null, args: null });
 		if ( ffi === -1 ) {		
@@ -1453,7 +1450,8 @@ $(document).ready(function() {
 			configPath = appDataPath + "/" + configFile;
 		}
 		if (fs.existsSync(configPath)) {
-			$.getJSON(configPath, function(json) {
+			try {
+				const json = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 				configData.hotKeys = json.hotKeys;
 				configData.startWithTheFirstSlideSelected = json.startWithTheFirstSlideSelected;
 				configData.highPerformance = false;
@@ -1462,7 +1460,9 @@ $(document).ready(function() {
 				setLangRsc();
 				updateMonitorList();
 				ipc.send('remote', { name: "passConfigData", details: configData });
-			});
+			} catch(e) {
+				console.error("Failed to read config:", e);
+			}
 		} else {
 			// Do nothing
 		}
@@ -1488,7 +1488,8 @@ $(document).ready(function() {
 			return;
 		}
 
-		$.getJSON(configPath, function(json) {
+		try {
+			const json = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 			if (
 				(json.showCheckerboard && !cacheData.showCheckerboard) ||
 				(!json.showCheckerboard && cacheData.showCheckerboard)
@@ -1516,7 +1517,9 @@ $(document).ready(function() {
 			) {
 				$('#monitor_trans').trigger("click");
 			}
-		});
+		} catch(e) {
+			console.error("Failed to read config:", e);
+		}
 	}
 	
 	function getMultipleMonitors() {
