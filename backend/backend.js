@@ -149,7 +149,6 @@ function init() {
 }
 
 function prepare() {
-	app.disableHardwareAcceleration();
 	app.allowRendererProcessReuse = true;
 	require('@electron/remote/main').initialize();
 
