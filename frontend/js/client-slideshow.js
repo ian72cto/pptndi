@@ -444,9 +444,6 @@ $(document).ready(function() {
 		} catch(e) {
 		}
 		relocateTitlebarElements();
-		$.ajaxSetup({
-			async: false
-		});
 		reflectConfig();
 		runLib();
 
@@ -577,13 +574,18 @@ $(document).ready(function() {
 			configPath = appDataPath + "/" + configFile;
 		}
 		if (fs.existsSync(configPath)) {
-			$.getJSON(configPath, function(json) {
+			try {
+				const json = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 				configData.hotKeys = json.hotKeys;
 				//configData.highPerformance = json.highPerformance;
 				configData.lang = json.lang;
 				setLangRsc();
 				ipc.send('remote', { name: "passConfigData", details: configData });
-			});
+			} catch(e) {
+				console.error("Failed to read config:", e);
+				configData.lang = configData.lang || "en";
+				setLangRsc();
+			}
 		} else {
 			// Do nothing
 		}
@@ -609,7 +611,8 @@ $(document).ready(function() {
 			return;
 		}
 
-		$.getJSON(configPath, function(json) {
+		try {
+			const json = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 			if (
 				(json.showCheckerboard && !cacheData.showCheckerboard) ||
 				(!json.showCheckerboard && cacheData.showCheckerboard)
@@ -640,7 +643,9 @@ $(document).ready(function() {
 				$("#pin").attr("src", "./img/pin_grey.png");
 				pin = false;
 			}
-		});
+		} catch(e) {
+			console.error("Failed to read cache:", e);
+		}
 	}
 
 	function cleanupForExit() {

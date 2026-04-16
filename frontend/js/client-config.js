@@ -128,9 +128,6 @@ $(document).ready(function() {
 	function init() {
 		const remote = require('@electron/remote');
 		relocateTitlebarElements();
-		$.ajaxSetup({
-			async: false
-		});
 
 		if ( process.platform === 'darwin' ) {
 			rendererList = ["Internal"];
