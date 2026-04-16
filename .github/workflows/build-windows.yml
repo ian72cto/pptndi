@@ -1,0 +1,41 @@
+name: Build Windows
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 16
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Download & Install NDI SDK
+        shell: powershell
+        run: |
+          $url = "https://downloads.ndi.tv/SDK/NDI_SDK/NDI%205%20SDK.exe"
+          $out = "$env:TEMP\NDI_SDK.exe"
+          Invoke-WebRequest -Uri $url -OutFile $out
+          Start-Process -FilePath $out -ArgumentList "/S" -Wait
+          echo "NDI SDK installed"
+
+      - name: Build
+        run: node scripts/build.js
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ppt-ndi-win32-x64
+          path: tmp/ppt-ndi-win32-x64/
+          retention-days: 7
