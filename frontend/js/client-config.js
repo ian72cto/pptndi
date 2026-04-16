@@ -45,7 +45,8 @@ $(document).ready(function() {
 	}
 
 	function loadConfig() {
-		$.getJSON(configPath, function(json) {
+		try {
+			const json = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 			if (json) {
 				configData.startAsTray = json.startAsTray || defaultData.startAsTray;
 				configData.startWithTheFirstSlideSelected = json.startWithTheFirstSlideSelected || defaultData.startWithTheFirstSlideSelected;
@@ -64,9 +65,12 @@ $(document).ready(function() {
 				$("#rendererList").val(configData.renderer);
 				$("#langList").val("lang_" + configData.lang);
 			}
+		} catch(e) {
+			console.error("Failed to read config:", e);
+			configData.lang = configData.lang || "en";
+		}
 
-			setLangRsc();
-		});
+		setLangRsc();
 	}
 
 	function setLangRsc() {
