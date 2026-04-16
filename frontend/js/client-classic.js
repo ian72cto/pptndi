@@ -1462,6 +1462,7 @@ $(document).ready(function() {
 				ipc.send('remote', { name: "passConfigData", details: configData });
 			} catch(e) {
 				console.error("Failed to read config:", e);
+				configData.lang = configData.lang || "en";
 			}
 		} else {
 			// Do nothing
