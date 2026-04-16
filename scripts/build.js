@@ -481,7 +481,8 @@ function _pack() {
 			fs.copySync( path.join( _TMPDIR, "deploy", "frontend", "i18n" ), "deploy/locales" );
 
 			out = execSync("node dev/node_modules/electron-packager/bin/electron-packager.js ./deploy ppt-ndi --electron-version=" + ver + " " + opt);
-			process.chdir( path.join(_WORKDIR, "tmp", "ppt-ndi-darwin-x64", "ppt-ndi.app", "Contents", "Frameworks" ) );
+			const packOutDir = `ppt-ndi-darwin-${electronArch}`;
+			process.chdir( path.join(_WORKDIR, "tmp", packOutDir, "ppt-ndi.app", "Contents", "Frameworks" ) );
 			fs.symlinkSync("../../Contents/Resources/app/libndi.dylib", "libndi.dylib");
 			process.chdir( path.join(_WORKDIR, "tmp") );
 		} catch(e) {
